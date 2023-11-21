@@ -4,6 +4,7 @@ import (
   "log"
   "time"
   "github.com/tarm/serial"
+  "strings"
 )
 
 func main() {
@@ -18,7 +19,17 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("%q", buf[:n])
+
+    data := string(buf[:n])
+
+    info := strings.Split(data, ",")
+
+    if len(info) == 3 {
+      log.Println("Humidity: ", info[0])
+      log.Println("Temperature: ", info[1])
+      log.Println("LDR: ", info[2])
+    }      
+
     time.Sleep(1000 * time.Millisecond)
 	}
 }

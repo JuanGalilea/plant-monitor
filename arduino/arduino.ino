@@ -29,14 +29,10 @@ void loop()
     return;
   }
 
-  Serial.print("Humidity: ");
   Serial.print(h);
-  Serial.print(" %\t");
-  Serial.print("Temperature: ");
+  Serial.print(",");
   Serial.print(hic);
-  Serial.print(" *C ");
-  Serial.print(" \t");
-  Serial.print("LDR: ");
+  Serial.print(",");
   Serial.println(sensorValue);
 
 }
