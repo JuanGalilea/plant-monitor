@@ -19,6 +19,6 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Printf("%q", buf[:n])
-    time.Sleep(525 * time.Millisecond)
+    time.Sleep(1000 * time.Millisecond)
 	}
 }

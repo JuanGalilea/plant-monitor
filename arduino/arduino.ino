@@ -16,7 +16,7 @@ void setup()
 
 void loop()
 {
-  delay(500);
+  delay(1000);
   float h = dht.readHumidity();
   float t = dht.readTemperature();
   int sensorValue = analogRead(PIN_LDR);
