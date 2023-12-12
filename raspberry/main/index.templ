@@ -1,4 +1,5 @@
 package main 
+
 templ hello(name string) {
 <html>
   <head>
@@ -16,11 +17,56 @@ templ hello(name string) {
     ></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
-    <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>+
+    <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
     <link
       rel="stylesheet"
       href="https://unpkg.com/charts.css/dist/charts.min.css"
     />
+    <script>
+      htmx.defineExtension('update_chartjs', {
+        transformResponse: function (text, xhr, elt) {
+          var response = JSON.parse(text);
+          var chart = Chart.getChart(response.chartId);
+
+          chart.config.data.datasets[0].data = response.data;
+          chart.options.plugins.title.text = response.title;
+
+          chart.update();
+
+          // Find the previous button and update its hx-get attributes
+          var previous = htmx.find("#" + response.previousButtonId)
+          previous.setAttribute("hx-get", response.previous);
+
+          // We have to notify HTMX about the updates to the DOM
+          htmx.process(previous); 
+
+          // Find the next button and update its hx-get attributes
+          var next = htmx.find("#" + response.nextButtonId)
+          next.setAttribute("hx-get", response.next);
+
+          // We have to notify HTMX about the updates to the DOM
+          htmx.process(next); 
+
+          // Disable the previous and next buttons if we are on the first or last page
+          if (response.self == response.previous) {
+              previous.setAttribute("disabled", "disabled");
+          } else {
+              previous.removeAttribute("disabled");
+          }
+
+          if (response.self == response.next) {
+              next.setAttribute("disabled", "disabled");
+          } else { 
+              next.removeAttribute("disabled");
+          }
+
+          // Return an empty string to prevent HTMX from performing string operations on a null.
+          return "";
+        }
+      });
+    </script>
   </head>
   <body>
     <h1>Hello, {name}</h1>
@@ -29,7 +75,7 @@ templ hello(name string) {
     </nav>
     <div class="container mt-4">
       <h1 class="text-center">Sensor Dashboard</h1>
-      <div hx-ext="sse" sse-connect="/events">
+      <div>
         <table class="table table-bordered">
           <thead class="thead-dark">
             <tr>
@@ -52,46 +98,28 @@ templ hello(name string) {
             </tr>
           </tbody>
         </table>
-        <table class="charts-css line hide-data">
+        <table class="charts-css line hide-data multiple">
           <caption>
             Line Example #1
           </caption>
-          <tbody>
-            <tr>
-              <td style="--start: 0; --end: 0.4">
-                <span class="data"> $ 40K </span>
-              </td>
-            </tr>
-            <tr>
-              <td style="--start: 0.4; --end: 0.2">
-                <span class="data"> $ 20K </span>
-              </td>
-            </tr>
-            <tr>
-              <td style="--start: 0.2; --end: 0.6">
-                <span class="data"> $ 60K </span>
-              </td>
-            </tr>
-            <tr>
-              <td style="--start: 0.6; --end: 0.4">
-                <span class="data"> $ 40K </span>
-              </td>
-            </tr>
-            <tr>
-              <td style="--start: 0.4; --end: 0.8">
-                <span class="data"> $ 80K </span>
-              </td>
-            </tr>
-            <tr>
-              <td style="--start: 0.8; --end: 0.6">
-                <span class="data"> $ 60K </span>
-              </td>
-            </tr>
-            <tr>
-              <td style="--start: 0.6; --end: 1">
-                <span class="data"> $ 100K </span>
-              </td>
-            </tr>
+          <tbody hx-ext="sse, " sse-connect="/events" hx-swap="beforeend" sse-swap="sowitroli">
+            <template hx-template="lineChartUpdate">
+              <tr>
+                <td style="--start: {{#humidityUpdate}}; --end: {humidity}">
+                  <span class="data"> </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="--start: {prevTemperature}; --end: {temperature}">
+                  <span class="data"> </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="--start: {prevLight}; --end: {light}">
+                  <span class="data"></span>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
