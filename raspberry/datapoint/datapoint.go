@@ -10,7 +10,7 @@ func normalizeHumidity(humidity string) string {
 	if err != nil {
 		return "0"
 	}
-	return strconv.FormatFloat(humidityFloat/100, 'f', 2, 64)
+	return strconv.FormatFloat(humidityFloat/100, 'f', 4, 64)
 }
 
 func normalizeTemperature(temperature string) string {
@@ -18,7 +18,7 @@ func normalizeTemperature(temperature string) string {
 	if err != nil {
 		return "0"
 	}
-	return strconv.FormatFloat(temperatureFloat/50, 'f', 2, 64)
+	return strconv.FormatFloat(temperatureFloat/50, 'f', 4, 64)
 }
 
 func normalizeLight(light string) string {
@@ -26,11 +26,11 @@ func normalizeLight(light string) string {
 	if err != nil {
 		return "0"
 	}
-	return strconv.FormatFloat(lightFloat/1024, 'f', 2, 64)
+	return strconv.FormatFloat(lightFloat/1024, 'f', 4, 64)
 }
 
 
-func renderDataPoint(actual comReader.SensorData, previous comReader.SensorData) string {
+func RenderDataPoint(actual comReader.SensorData, previous comReader.SensorData) string {
 	previousHumidity := normalizeHumidity(previous.Humidity)
 	previousTemperature := normalizeTemperature(previous.Temperature)
 	previousLight := normalizeLight(previous.Light)
@@ -39,15 +39,5 @@ func renderDataPoint(actual comReader.SensorData, previous comReader.SensorData)
 	currentTemperature := normalizeTemperature(actual.Temperature)	
 	currentLight := normalizeLight(actual.Light)
 
-	return '<tr>
-	<td style="--start: '+ previousHumidity +'; --end: '+ currentHumidity +'">
-	  <span class="data"> ' + currentHumidity + '</span>
-	</td>
-	<td style="--start: '+previousTemperature+'; --end: '+ currentTemperature+ '">
-	  <span class="data"> '+currentTemperature+' </span>
-	</td>
-	<td style="--start: '+previousLight+'; --end: '+currentLight+'">
-	  <span class="data"> '+currentLight+' </span>
-	</td>
-  </tr>'
+	return "<tr><td style='--start: "+ previousHumidity +"; --end: "+ currentHumidity +"'><span class='data'> " + currentHumidity + "</span></td><td style='--start: "+previousTemperature+"; --end: "+ currentTemperature+"'><span class='data'> "+currentTemperature+" </span></td><td style='--start: "+previousLight+"; --end: "+currentLight+"'><span class='data'> "+currentLight+" </span></td></tr>"
 }

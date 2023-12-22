@@ -33,7 +33,7 @@ templ hello(name string) {
     <div class="container mt-4">
       <h1 class="text-center">Sensor Dashboard</h1>
       <div>
-        <table class="table table-bordered">
+        <table class="table table-bordered" hx-ext="sse" sse-connect="/events">
           <thead class="thead-dark">
             <tr>
               <th>Sensor Type</th>
@@ -59,7 +59,9 @@ templ hello(name string) {
           <caption>
             Line Example #1
           </caption>
+
           <tbody hx-ext="sse" sse-connect="/events" hx-swap="beforeend" sse-swap="sowitroli">
+            
           </tbody>
         </table>
       </div>

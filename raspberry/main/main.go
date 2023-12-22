@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"net/http"
 	"github.com/a-h/templ"
 	"klog.co/plantz/comReader"
@@ -11,9 +10,6 @@ import (
 
 func main() {
 	dataChannel := make(chan comReader.SensorData)
-	prevHumidity := "0"
-	prevTemperature := "0"
-	prevLight := "0"
   
   // // Start the Read function as a goroutine
 	go comReader.Read(dataChannel)

@@ -32,7 +32,7 @@ func lineChartUpdate(prevHumidity string, humidity string, prevTemperature strin
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></td></tr><tr><td style=\"--start: {prevTemperature}; --end: {temperature}\"><span class=\"data\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></td><td style=\"--start: {prevTemperature}; --end: {temperature}\"><span class=\"data\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -41,7 +41,7 @@ func lineChartUpdate(prevHumidity string, humidity string, prevTemperature strin
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></td></tr><tr><td style=\"--start: {prevLight}; --end: {light}\"><span class=\"data\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></td><td style=\"--start: {prevLight}; --end: {light}\"><span class=\"data\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
