@@ -24,49 +24,6 @@ templ hello(name string) {
       rel="stylesheet"
       href="https://unpkg.com/charts.css/dist/charts.min.css"
     />
-    <script>
-      htmx.defineExtension('update_chartjs', {
-        transformResponse: function (text, xhr, elt) {
-          var response = JSON.parse(text);
-          var chart = Chart.getChart(response.chartId);
-
-          chart.config.data.datasets[0].data = response.data;
-          chart.options.plugins.title.text = response.title;
-
-          chart.update();
-
-          // Find the previous button and update its hx-get attributes
-          var previous = htmx.find("#" + response.previousButtonId)
-          previous.setAttribute("hx-get", response.previous);
-
-          // We have to notify HTMX about the updates to the DOM
-          htmx.process(previous); 
-
-          // Find the next button and update its hx-get attributes
-          var next = htmx.find("#" + response.nextButtonId)
-          next.setAttribute("hx-get", response.next);
-
-          // We have to notify HTMX about the updates to the DOM
-          htmx.process(next); 
-
-          // Disable the previous and next buttons if we are on the first or last page
-          if (response.self == response.previous) {
-              previous.setAttribute("disabled", "disabled");
-          } else {
-              previous.removeAttribute("disabled");
-          }
-
-          if (response.self == response.next) {
-              next.setAttribute("disabled", "disabled");
-          } else { 
-              next.removeAttribute("disabled");
-          }
-
-          // Return an empty string to prevent HTMX from performing string operations on a null.
-          return "";
-        }
-      });
-    </script>
   </head>
   <body>
     <h1>Hello, {name}</h1>
@@ -102,24 +59,7 @@ templ hello(name string) {
           <caption>
             Line Example #1
           </caption>
-          <tbody hx-ext="sse, " sse-connect="/events" hx-swap="beforeend" sse-swap="sowitroli">
-            <template hx-template="lineChartUpdate">
-              <tr>
-                <td style="--start: {{#humidityUpdate}}; --end: {humidity}">
-                  <span class="data"> </span>
-                </td>
-              </tr>
-              <tr>
-                <td style="--start: {prevTemperature}; --end: {temperature}">
-                  <span class="data"> </span>
-                </td>
-              </tr>
-              <tr>
-                <td style="--start: {prevLight}; --end: {light}">
-                  <span class="data"></span>
-                </td>
-              </tr>
-            </template>
+          <tbody hx-ext="sse" sse-connect="/events" hx-swap="beforeend" sse-swap="sowitroli">
           </tbody>
         </table>
       </div>
